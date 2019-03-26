@@ -202,7 +202,7 @@ ranges and then calls the fb executable.
 
 BUGS
 
-Command line argument parsing is ad hoc and faily brittle.
+Command line argument parsing is ad hoc and brittle.
 
 The roll operation generates excessive blur.  To see this, try:
     fb --roll=1
