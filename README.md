@@ -110,42 +110,51 @@ blend parameters.
 Optional command line arguments are:
 
 --rows=\<int\>
+
 Specifies the number of rows in the display window.
 
---cols=<int>
+--cols=\<int\>
+
 Specifies the number of colums in the display window.
 
---blur=<int>
+--blur=\<int\>
+
 The size of the convolution mask for a gaussian blur.
 Must be an odd integer, typically 3 or 5.  A value of 1 specifies no blur.
 Blur simulates focus control of the camera in non-simulated video feedback.
 
---sharpen=<float>
+--sharpen=\<float\>
+
 A value of 1 specifies unsharp masking, a value >1 results in high-boost filtering,
 emphasizing high spatial frequencies.
 For both cases the gaussian kernel is hardcoded to size 3.
 
---roll=<float>
+--roll=\<float\>
+
 Rotate the virtual camera this many degrees around the viewing axis.
 
---blend=<float>
+--blend=\<float\>
+
 Controls the weightings applied to the current and previous image when blended.
 A value of 0.0 retains the old image in its entirety, so there will be no
 change to the initial random image regardless of the value of the other parameters.
 A value of 1.0 discards the previous image, replacing it entirely with the new image.
 The default value of 0.5 crossblends the old and new image with equal weights.
 
---zoom=<float>
+--zoom=\<float\>
+
 Specifies how much to zoom in.  The default of 1.0 specifies no zoom.
 A value of 1.01 will zoom in 1%.
 
---crawl=<float>,<float>,<float>,<float>
+--crawl=\<float\>,\<float\>,\<float\>,\<float\>
+
 Pixel hue is interpreted as a polar angle, saturation and value combine
 linearly and bilinearly with the other parameters to define a resampling
 offset for each pixel, causing colors to crawl around.
 The idea is adapted from http://erleuchtet.org/2011/06/white-one.html
 
---noise=<float>,<float>
+--noise=\<float\>,\<float\>
+
 The first value in the range [0,1] specifies how much noise is to be applied to
 each pixel.  For each color channel of each pixel a random number [-1,1], scaled
 by the first noise parameter, is added to that color value, if another independent
@@ -154,27 +163,33 @@ So the first parameter can be thought of as the noise level, and the second a mu
 parameter indicating what fraction of the color values will be mutated by noise.
 
 --histeq
+
 Perform a histogram equalization.
 Use of --histeq as the final parameter avoids the possibility of the
 display converging to the fixed point of an all white or all black image.
 
 --invert
+
 Invert the value channel of the image in HSV space.
 
---depth=<int>
+--depth=\<int\>
+
 The default is color images (i.e. --depth=3), --depth=1 specifies greyscale.
     
---seed=<int>
+--seed=\<int\>
+
 A specific seed can be supplied to the random number generator with the optional --seed argument.
 If this argument is not supplied, a random seed from the hardware entropy pool is used.
 For runs to be repeatable, the same seed must be used.
 
---dump=<string>
+--dump=\<string\>
+
 This allows specification of a directory into which images should be saved.
 When images are being saved, no display window is created.
 Images are saved as .PNG files.
 
---nframes=<int>
+--nframes=\<int\>
+
 This parameter specifies how many frames are to be saved to the directory specified
 by the --dump parameter.
 
