@@ -7,7 +7,7 @@ peering though the half-silvered mirror and glimpsing the secrets of infinity.
 
 Infinity viewed in this manner was disappointingly dim.
 
-Have you grown tired of viewing Youtube videos of cats and musical groups?
+Have you grown tired of viewing YouTube videos of cats and musical groups?
 Are twitch streams too much like quotidian reality for you?
 Now you can watch endless hours of video of... video.
 What could be more pataphysical?
@@ -147,9 +147,9 @@ The idea is adapted from http://erleuchtet.org/2011/06/white-one.html
 
 --noise=<float>,<float>
 The first value in the range [0,1] specifies how much noise is to be applied to
-each pixel.  For each color channel of each pixel a random number [-1,1] is added to
-that color value, if another independent random number in the range [0,1] generated
-for that pixel exceeds the value of the 2nd supplied parameter.
+each pixel.  For each color channel of each pixel a random number [-1,1], scaled
+by the first noise parameter, is added to that color value, if another independent
+random number in the range [0,1] generated for that pixel exceeds the value of the 2nd supplied parameter.
 So the first parameter can be thought of as the noise level, and the second a mutation
 parameter indicating what fraction of the color values will be mutated by noise.
 
@@ -162,7 +162,7 @@ display converging to the fixed point of an all white or all black image.
 Invert the value channel of the image in HSV space.
 
 --depth=<int>
-The default is color images, --depth=1 specifies greyscale.
+The default is color images (i.e. --depth=3), --depth=1 specifies greyscale.
     
 --seed=<int>
 A specific seed can be supplied to the random number generator with the optional --seed argument.
@@ -182,7 +182,7 @@ by the --dump parameter.
 STOCHASTIC PARAMETERS
 
 The Perl script fb_rand.pl selects random values for parameters in reasonable
-ranges and calls the fb executable.
+ranges and then calls the fb executable.
 
 
 BUGS
@@ -200,6 +200,7 @@ EXAMPLES
 fb --crawl=1.47101180923741,-1.30636721107872,0.330758409810187,-0.896424485305786 --seed=180838769 --roll=159.553423379374  --invert --zoom=1.02490922469164 --blur=3 --blend=0.935182918689936 --sharpen=1.82351686590749 --histeq
 
 fb --roll=313.103150683282 --zoom=1.4  --crawl=0.282938866108765,-0.682566848618407,-0.842619403029857,-1.99775540356571 --seed=3675620808 --sharpen=1.16410494334463 --blend=0.470024019142404 --noise=0.0715754031640216,0.00671502775216126 --blur=1 --histeq
+
 
 REFERENCES
 
