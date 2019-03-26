@@ -71,19 +71,19 @@ array invert(array img)
 	if ( param.depth == 1 )
 		return 1.0 - img;
 
-    // convert to HSV
-    array hsv = colorSpace(img, AF_HSV, AF_RGB);
+	// convert to HSV
+	array hsv = colorSpace(img, AF_HSV, AF_RGB);
 
-    // each channel, as a 2D array in [0,1]
-    array h = hsv(span, span, 0);
-    array s = hsv(span, span, 1);
-    array v = hsv(span, span, 2);
+	// each channel, as a 2D array in [0,1]
+	array h = hsv(span, span, 0);
+	array s = hsv(span, span, 1);
+	array v = hsv(span, span, 2);
 
-    // invert brightness channel
-    v = 1.0 - v;
+	// invert brightness channel
+	v = 1.0 - v;
 
-    // convert back to RGB
-    array out = colorSpace(join(2,h,s,v), AF_RGB, AF_HSV);
+	// convert back to RGB
+	array out = colorSpace(join(2,h,s,v), AF_RGB, AF_HSV);
 
 	return out;
 }
@@ -96,12 +96,12 @@ array crawl(array img)
 		return img;
 
 	// convert to HSV
-    array hsv = colorSpace(img, AF_HSV, AF_RGB);
+	array hsv = colorSpace(img, AF_HSV, AF_RGB);
 
 	// each channel, as a 2D array in [0,1]
-    array h = hsv(span, span, 0);
-    array s = hsv(span, span, 1);
-    array v = hsv(span, span, 2);
+	array h = hsv(span, span, 0);
+	array s = hsv(span, span, 1);
+	array v = hsv(span, span, 2);
 
 	// map H [0,1] into polar angle [0,2pi]
 	array angle = 2.0 * PI * h;
@@ -121,10 +121,10 @@ array crawl(array img)
 
 	// 2d matrix of row indices (unmodified)
 	// 3x4 example:
-    // 0 0 0 0
-    // 1 1 1 0
-    // 2 2 2 0
-    array rowidx = iota(dim4(rows), dim4(1,cols));
+	// 0 0 0 0
+	// 1 1 1 0
+	// 2 2 2 0
+	array rowidx = iota(dim4(rows), dim4(1,cols));
 
 	// apply the crawl to the indices
 	colidx += coloff;
@@ -153,13 +153,13 @@ array noise(array img)
 // clip values to 1.0
 array clip(array img)
 {
-    // 2d mask showing where elements exceed 1.0
-    array clip = img < 1.0;
+	// 2d mask showing where elements exceed 1.0
+	array clip = img < 1.0;
 
 	// replace those elements with 1.0
-    replace(img, clip, one);
+	replace(img, clip, one);
 
-    return img;
+	return img;
 }
 
 // rotate image by given angle (degrees)
@@ -172,20 +172,20 @@ array roll(array img)
 // blend with previous image (global array, image)
 array blend(array img)
 {
-    return param.blend*img + (1.0-param.blend)*image;
+	return param.blend*img + (1.0-param.blend)*image;
 }
 
 // blur by convolution with gaussian kernel of specified size
 array blur(array img)
 {   
-    return convolve2(img, gaussianKernel(param.blur,param.blur));
+	return convolve2(img, gaussianKernel(param.blur,param.blur));
 }
 
 // unsharp mask (from ArrayFire image_editing.cpp example)
 // Blur kernel size hardcoded as 3 (could make this a different parameter)
 array sharpen(array img)
 {
-    return img + param.sharpen * (img -  convolve2(img, gaussianKernel(3,3)));
+	return img + param.sharpen * (img -  convolve2(img, gaussianKernel(3,3)));
 }
 
 // histogram equalization, image which can be RGB or greyscale
@@ -195,39 +195,39 @@ array histeq(array img)
 	if ( param.depth == 1 ) {
 		// scale into [0,255]
 		array v = img * 255.f;
-    
+	
 		// create histogram of intensity channel
 		array histo = histogram(v,
-			256,    // # bins
-            0,      // minval
-            255);   // maxval
+			256,	// # bins
+			0,	  // minval
+			255);   // maxval
 
-    	// apply histogram equalization to intensity, and scale into [0,1]
-    	return histEqual(v, histo) / 255.f;
+		// apply histogram equalization to intensity, and scale into [0,1]
+		return histEqual(v, histo) / 255.f;
 	}
 
-    // convert to HSV
-    array img_hsv = colorSpace(img, AF_HSV, AF_RGB);
+	// convert to HSV
+	array img_hsv = colorSpace(img, AF_HSV, AF_RGB);
 
-    // pointer to the intensity channel, scale into [0,254]
+	// pointer to the intensity channel, scale into [0,254]
 	// (Should scale to 255, but saveImage was normalizing some images to black, presumably because
 	// roundoff caused some values to slightly exceed 255 ?)
-    array v = img_hsv(span, span, 2) * 255.f;
-    
-    // create histogram of intensity channel
-    array histo = histogram(v,
-            256,    // # bins
-            0,      // minval
-            255);   // maxval
-    
-    // apply histogram equalization to intensity, and scale into [0,1]
-    array vnorm = histEqual(v, histo) / 256.f;
+	array v = img_hsv(span, span, 2) * 255.f;
+	
+	// create histogram of intensity channel
+	array histo = histogram(v,
+			256,	// # bins
+			0,	  // minval
+			255);   // maxval
+	
+	// apply histogram equalization to intensity, and scale into [0,1]
+	array vnorm = histEqual(v, histo) / 256.f;
 
-    // replace the value channel in the HSV image with the normalized value
-    img_hsv(span, span, 2) = vnorm;
+	// replace the value channel in the HSV image with the normalized value
+	img_hsv(span, span, 2) = vnorm;
 
-    // convert back to RGB
-    return colorSpace(img_hsv, AF_RGB, AF_HSV);
+	// convert back to RGB
+	return colorSpace(img_hsv, AF_RGB, AF_HSV);
 }
 
 /*
@@ -235,19 +235,19 @@ array histeq(array img)
  */
 array zoom(array in)
 {
-    int rows,cols;
-    int shaverows,shavecols;
+	int rows,cols;
+	int shaverows,shavecols;
 
-    // size of input image
-    rows = (int)in.dims(0);
-    cols = (int)in.dims(1);
+	// size of input image
+	rows = (int)in.dims(0);
+	cols = (int)in.dims(1);
 
-    // how many pixels to shave off right and left
-    shaverows = (int)(0.5 + 0.5*rows*(param.zoom-1.0));
-    shavecols = (int)(0.5 + 0.5*cols*(param.zoom-1.0));
+	// how many pixels to shave off right and left
+	shaverows = (int)(0.5 + 0.5*rows*(param.zoom-1.0));
+	shavecols = (int)(0.5 + 0.5*cols*(param.zoom-1.0));
 
-    array cropped = in(seq(shaverows, rows-shaverows-1), seq(shavecols, cols-shavecols-1), span);
-    return resize(cropped, rows, cols);
+	array cropped = in(seq(shaverows, rows-shaverows-1), seq(shavecols, cols-shavecols-1), span);
+	return resize(cropped, rows, cols);
 }
 
 // get random seed from entropy pool, used to initialize the ArrayFire RNG
@@ -255,7 +255,7 @@ int randseed()
 {
 	int randomfd;
 	int seed;
-	        
+			
 	if ( 0 > (randomfd = open("/dev/urandom",O_RDONLY)) ) {
 		fprintf(stderr,"Couldn't open /dev/urandom\n");
 		exit(-1);
@@ -285,79 +285,79 @@ array run(array in)
 
 void scanargs(int argc, char *argv[])
 {
-    int i;
+	int i;
 	char *c;
 
-    for ( i=1 ; i<argc ; i++ ) {
-        if ( c=strstr(argv[i],"rows") ) {
+	for ( i=1 ; i<argc ; i++ ) {
+		if ( c=strstr(argv[i],"rows") ) {
 			rows = atof(c+5);
-        }
-        else if ( c=strstr(argv[i],"cols") ) {
+		}
+		else if ( c=strstr(argv[i],"cols") ) {
 			cols = atof(c+5);
-        }
-        else if ( c=strstr(argv[i],"blur") ) {
+		}
+		else if ( c=strstr(argv[i],"blur") ) {
 			param.blur = atoi(c+5);
 			// a blur make of size 1 is a no op
 			if ( param.blur != 1 )
 				pipeline[npipe++] = blur;
-        }
-        else if ( c=strstr(argv[i],"sharpen") ) {
+		}
+		else if ( c=strstr(argv[i],"sharpen") ) {
 			param.sharpen = atof(c+8);
 			pipeline[npipe++] = sharpen;
-        }
-        else if ( c=strstr(argv[i],"roll") ) {
+		}
+		else if ( c=strstr(argv[i],"roll") ) {
 			param.roll = atof(c+5);
 			pipeline[npipe++] = roll;
-        }
-        else if ( c=strstr(argv[i],"blend") ) {
+		}
+		else if ( c=strstr(argv[i],"blend") ) {
 			param.blend = atof(c+6);
 			pipeline[npipe++] = blend;
-        }
-        else if ( c=strstr(argv[i],"zoom") ) {
+		}
+		else if ( c=strstr(argv[i],"zoom") ) {
 			param.zoom = atof(c+5);
 			pipeline[npipe++] = zoom;
-        }
-        else if ( c=strstr(argv[i],"crawl") ) {
+		}
+		else if ( c=strstr(argv[i],"crawl") ) {
 			if ( 4 != sscanf(c+6,"%f,%f,%f,%f",&param.crawlds,&param.crawldv,&param.crawldsv,&param.crawld) ) {
 				fprintf(stderr,"Error, --crawl takes 4 comma-delimited floats\n");
 				exit(-1);
 			}
 			pipeline[npipe++] = crawl;
-        }
-        else if ( c=strstr(argv[i],"noise") ) {
+		}
+		else if ( c=strstr(argv[i],"noise") ) {
 			if ( 2 != sscanf(c+6,"%f,%f",&param.noise,&param.mutate) ) {
 				fprintf(stderr,"Error, --noise takes 2 comma-delimited floats\n");
 				exit(-1);
 			}
 			pipeline[npipe++] = noise;
-        }
-        else if ( c=strstr(argv[i],"histeq") ) {
+		}
+		else if ( c=strstr(argv[i],"histeq") ) {
 			pipeline[npipe++] = histeq;
-        }
-        else if ( c=strstr(argv[i],"invert") ) {
+		}
+		else if ( c=strstr(argv[i],"invert") ) {
 			pipeline[npipe++] = invert;
-        }
-        else if ( c=strstr(argv[i],"depth") ) {
+		}
+		else if ( c=strstr(argv[i],"depth") ) {
 			param.depth = atoi(c+6);
-        }
-        else if ( c=strstr(argv[i],"seed") ) {
+		}
+		else if ( c=strstr(argv[i],"seed") ) {
 			param.seed = atoi(c+5);
-        }
-        else if ( c=strstr(argv[i],"dump") ) {
+		}
+		else if ( c=strstr(argv[i],"dump") ) {
 			dumpdir = c+5;
-        }
-        else if ( c=strstr(argv[i],"nframes") ) {
+		}
+		else if ( c=strstr(argv[i],"nframes") ) {
 			nframes = atoi(c+8);
-        }
-        else {
-            fprintf(stderr,"Error, unknown parameter: %s\n",argv[i]);
-            exit(-1);
-        }
+		}
+		else {
+			fprintf(stderr,"Error, unknown parameter: %s\n",argv[i]);
+			exit(-1);
+		}
 		if ( npipe >= MAXPIPE ) {
 			fprintf(stderr,"Error, too many image operations, increase MAXPIPE\n");
-            exit(-1);
+			exit(-1);
 		}
-    }
+	}
 
 	// sanity check parameters for sensible values
 	if ( param.blur<1 || param.blur%2 != 1 ) {
@@ -388,19 +388,19 @@ int main(int argc, char** argv)
 	int frame=0;
 
 	// default parameter values
-    param.blur = 1;
-    param.sharpen = 0.0;
-    param.roll = 0.0;
-    param.zoom = 1.0;
-    param.blend = 0.5;
-    param.crawlds = 0.0;
-    param.crawldv = 0.0;
-    param.crawldsv = 0.0;
-    param.crawld = 0.0;
-    param.noise = 0.0;
-    param.mutate = 0.0;
-    param.depth = 3;
-    param.seed = 0;
+	param.blur = 1;
+	param.sharpen = 0.0;
+	param.roll = 0.0;
+	param.zoom = 1.0;
+	param.blend = 0.5;
+	param.crawlds = 0.0;
+	param.crawldv = 0.0;
+	param.crawldsv = 0.0;
+	param.crawld = 0.0;
+	param.noise = 0.0;
+	param.mutate = 0.0;
+	param.depth = 3;
+	param.seed = 0;
 
 	// process cmdline args
 	scanargs(argc,argv);
@@ -416,7 +416,7 @@ int main(int argc, char** argv)
 	// if not dumping frames to files, open the display window
 	if ( !dumpdir ) {
 		// create ArrayFire display window
-    	win = new Window(cols,rows,"feedback");
+		win = new Window(cols,rows,"feedback");
 	}
 
 	// Initial RGB image, random colors.
@@ -427,21 +427,21 @@ int main(int argc, char** argv)
 	t0 = clock();
 
 	// loop until window closed or enough frames dumped
-    while ( (dumpdir && frame<nframes) || (!dumpdir && !win->close()) ) {
+	while ( (dumpdir && frame<nframes) || (!dumpdir && !win->close()) ) {
 
 		// execute the pipeline of image processing operations
 		image = run(image);
 
-        // dump or display image
-        if ( dumpdir ) {
+		// dump or display image
+		if ( dumpdir ) {
 			char buf[80];
-            sprintf(buf,"%s/frame%05d.png",dumpdir,frame);
-            saveImage(buf, clip(image));
+			sprintf(buf,"%s/frame%05d.png",dumpdir,frame);
+			saveImage(buf, clip(image));
 		}
 		else {
 			// render array to the window (single buffered)
-        	win->image(image);
-        	win->show();
+			win->image(image);
+			win->show();
 		}
 			
 		frame++;
