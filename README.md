@@ -18,7 +18,7 @@ I have always been fascinated by what happens when one points
 a camera into a video monitor displaying the camera image.
 For many configurations of camera rotation and zoom, the result can be
 an endless complex and intriguing set of images, high-dimensional
-chaos, also known as spatio-temporal chaos. [Crutchfield1984] [Crutchfield1988]
+chaos, also known as spatiotemporal chaos. [Crutchfield1984] [Crutchfield1988]
 
 The resulting patterns can include those similar to Turing's reaction
 diffusion PDEs [Turing1952], although in feedback the
@@ -67,8 +67,8 @@ DEPENDENCIES
 
 ArrayFire GPU library Version 3.6.2.
 
-An NVidia GPU with a sufficientlr recent driver.
-ArrayFire 3.6.2 is built against CUDA 10.0 and precompiled versions
+An NVidia GPU with a sufficiently recent driver.
+ArrayFire 3.6.2 is built using CUDA 10.0, and precompiled versions
 of the ArrayFire library come with necessary CUDA 10.0 dependencies.
 For CUDA 10 and 10.1 the minimum NVidia driver versions are:
     CUDA 10010, Linux(418.39), Windows(418.96)
@@ -115,7 +115,7 @@ Specifies the number of rows in the display window.
 
 --cols=\<int\>
 
-Specifies the number of colums in the display window.
+Specifies the number of columns in the display window.
 
 --blur=\<int\>
 
