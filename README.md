@@ -75,7 +75,7 @@ For CUDA 10 and 10.1 the minimum NVidia driver versions are:
     CUDA 10000, Linux(410.48), Windows(411.31)
 
 
-BUILDING
+COMPILING
 
 This code has been tested only on Ubuntu 16.04.
 
@@ -163,9 +163,10 @@ Invert the value channel of the image in HSV space.
 
 --depth=<int>
 The default is color images, --depth=1 specifies greyscale.
-
-A specific seed can be supplied to the random number generator can seeded with the optional --seed argument.
-If this argument is not supplied, a random seed from the entropy pool is used.
+    
+--seed=<int>
+A specific seed can be supplied to the random number generator with the optional --seed argument.
+If this argument is not supplied, a random seed from the hardware entropy pool is used.
 For runs to be repeatable, the same seed must be used.
 
 --dump=<string>
