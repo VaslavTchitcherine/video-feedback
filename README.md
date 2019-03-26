@@ -109,7 +109,7 @@ blend parameters.
 
 Optional command line arguments are:
 
---rows=<int>
+--rows=\<int\>
 Specifies the number of rows in the display window.
 
 --cols=<int>
