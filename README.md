@@ -96,12 +96,16 @@ initial image, and the simulated video feedback begins.
 
 The lexical order of command line parameters specifies the
 order in which the operations are performed.   For example:
+
     fb --blur=3 --roll=1 --zoom=1.01
+    
 will first apply a gaussian blur with a 3x3 mask, then apply a 1 degree roll
 to the result of the blur, followed by a zoom by a factor of 1.01
 before blending the result with the current frame according to the default
 blend parameters.  Whereas:
+
     fb --zoom=1.01 --roll=1 --blur=3
+    
 will first zoom the image by a factor of 1.01 and then apply a roll of 1 degree,
 followed by a blur with a 3x3 mask,
 again before blending the result with the current frame according to the default
@@ -127,11 +131,13 @@ Blur simulates focus control of the camera in non-simulated video feedback.
 
 A value of 1 specifies unsharp masking, a value >1 results in high-boost filtering,
 emphasizing high spatial frequencies.
-For both cases the gaussian kernel is hardcoded to size 3.
+For both cases the gaussian smoothing kernel is hardcoded to size 3.
 
 --roll=\<float\>
 
 Rotate the virtual camera this many degrees around the viewing axis.
+(Implementing the other 5DOF of camera motion might be interesting,
+but I prefer to keep the parameter space small.)
 
 --blend=\<float\>
 
@@ -148,24 +154,28 @@ A value of 1.01 will zoom in 1%.
 
 --crawl=\<float\>,\<float\>,\<float\>,\<float\>
 
+This operation does not correspond to anything in non-simulated video feedback,
+but can look nice. 
 Pixel hue is interpreted as a polar angle, saturation and value combine
 linearly and bilinearly with the other parameters to define a resampling
-offset for each pixel, causing colors to crawl around.
+offset for each pixel.  Colors crawl around.
 The idea is adapted from http://erleuchtet.org/2011/06/white-one.html
 
 --noise=\<float\>,\<float\>
 
-The first value in the range [0,1] specifies how much noise is to be applied to
-each pixel.  For each color channel of each pixel a random number [-1,1], scaled
+Noise is applied independently to each of the 3 channels of the RGB image.
+Noise is specified with a pair of parameters.
+The first value in the range [0,1] specifies the noise level.
+For each color channel of each pixel a random number [-1,1], scaled
 by the first noise parameter, is added to that color value, if another independent
 random number in the range [0,1] generated for that pixel exceeds the value of the 2nd supplied parameter.
 So the first parameter can be thought of as the noise level, and the second a mutation
-parameter indicating what fraction of the color values will be mutated by noise.
+parameter indicating what fraction of the color channel bytes will be mutated by noise.
 
 --histeq
 
 Perform a histogram equalization.
-Use of --histeq as the final parameter avoids the possibility of the
+Use of --histeq as the final parameter usually avoids the possibility of the
 display converging to the fixed point of an all white or all black image.
 
 --invert
@@ -202,7 +212,7 @@ ranges and then calls the fb executable.
 
 BUGS
 
-Command line argument parsing is ad hoc and brittle.
+Command line argument parsing is ad hoc and probably brittle.
 
 The roll operation generates excessive blur.  To see this, try:
     fb --roll=1
@@ -215,6 +225,8 @@ EXAMPLES
 fb --crawl=1.47101180923741,-1.30636721107872,0.330758409810187,-0.896424485305786 --seed=180838769 --roll=159.553423379374  --invert --zoom=1.02490922469164 --blur=3 --blend=0.935182918689936 --sharpen=1.82351686590749 --histeq
 
 fb --roll=313.103150683282 --zoom=1.4  --crawl=0.282938866108765,-0.682566848618407,-0.842619403029857,-1.99775540356571 --seed=3675620808 --sharpen=1.16410494334463 --blend=0.470024019142404 --noise=0.0715754031640216,0.00671502775216126 --blur=1 --histeq
+
+fb --blur=3 --noise=0.11221937909431,0.442132798393086 --sharpen=1.32626924449045 --crawl=-1.8560346745177,-0.58420994136246,1.18937920243752,-1.65980069146538 --blend=0.0103611321074659 --roll=341.786139760924 --seed=1428432657 --zoom=1.03250519778098 --histeq
 
 
 REFERENCES
